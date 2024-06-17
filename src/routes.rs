@@ -19,22 +19,32 @@ use warp::{ reject::Rejection, reply::Reply, Filter };
 // To handle the errors happening in the routes
 async fn handle_rejection(err: Rejection) -> Result<impl Reply, Rejection> {
     // error route not found
-    if err.is_not_found(){
-        Ok(warp::reply::with_status(
-            wrap::reply::json(&format!("Error:{:?}", err)),
-            wrap::http::StatusCode::NOT_FOUND;
-        ))
-    } else if let Some(_) = err.find()::<warp::filters::body::BodyDeserializeError>(){
-        Ok(warp::reply::with_status(
-            warp::reply::json(&format!("Error: Failed to deserialize the request body")),
-            warp::http::StatusCode::BAD_REQUEST,
-        ))
+    if err.is_not_found() {
+        Ok(
+            warp::reply::with_status(
+                wrap::reply::json(&format!("Error:{:?}", err)),
+                wrap::http::StatusCode::NOT_FOUND
+            )
+        )
+    } else if let Some(_) = err.find::<warp::filters::body::BodyDeserializeError>() {
+        Ok(
+            warp::reply::with_status(
+                warp::reply::json(&format!("Error: Failed to deserialize the request body")),
+                warp::http::StatusCode::BAD_REQUEST
+            )
+        )
     } else {
-        Ok(warp::reply_with_status(
-            warp_reply_json(&format!("Error: {:?}", err)),
-            warp::http::StatusCode::INTERNAL_SERVER_ERROR,
-        ))
+        Ok(
+            warp::reply_with_status(
+                warp_reply_json(&format!("Error: {:?}", err)),
+                warp::http::StatusCode::INTERNAL_SERVER_ERROR
+            )
+        )
     }
+}
+
+fn with_db() -> impl Filter<Extract = (Connection,), Error = Infallible> + Clone {
+    warp::any().map(|| get_db_conn())
 }
 
 pub fn list_all_orders_routes() {}

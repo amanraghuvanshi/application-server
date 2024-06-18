@@ -33,7 +33,10 @@ dependencies = [
 name = "application-server"
 version = "0.1.0"
 dependencies = [
+ "rand",
  "rusqlite",
+ "serde",
+ "serde_json",
  "tokio",
  "warp",
 ]

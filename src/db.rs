@@ -4,6 +4,7 @@ pub fn get_db_conn() -> Connection {
     let conn: Connection = Connection::open("resto-warp.db").expect(
         "Failed to open SQLite Connection"
     );
+    return conn;
 }
 
 pub fn initialize_db() {
